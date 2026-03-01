@@ -1,10 +1,20 @@
-export default function HomePage() {
-  return (
-    <main className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-2xl font-bold text-foreground">MenuCost</h1>
-        <p className="mt-2 text-sm text-muted-foreground">מערכת ניהול עלויות מנות</p>
-      </div>
-    </main>
-  )
+import { redirect } from 'next/navigation'
+import { auth } from '@/shared/lib/auth'
+import { prisma } from '@/shared/lib/prisma'
+
+export default async function RootPage() {
+  const session = await auth()
+
+  if (!session?.user?.id) redirect('/login')
+
+  // Find user's first workspace
+  const membership = await prisma.workspaceMember.findFirst({
+    where: { userId: session.user.id },
+    include: { workspace: { select: { slug: true } } },
+    orderBy: { invitedAt: 'asc' },
+  })
+
+  if (!membership) redirect('/onboarding')
+
+  redirect(`/${membership.workspace.slug}/dashboard`)
 }

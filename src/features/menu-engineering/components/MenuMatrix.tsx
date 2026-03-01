@@ -51,8 +51,10 @@ export function MenuMatrix({ dishes, avgProfitability, avgPopularity, onSelectDi
       <svg
         viewBox={`0 0 ${SVG_W} ${SVG_H}`}
         className="w-full h-auto"
-        aria-label="מטריצת Menu Engineering"
+        role="img"
+        aria-label="מטריצת Menu Engineering — גרף פיזור של מנות לפי רווחיות ופופולריות"
       >
+        <title>מטריצת Menu Engineering</title>
         {/* Quadrant backgrounds */}
         <rect x={PAD} y={PAD} width={divX - PAD} height={divY - PAD} fill="#f59e0b" fillOpacity={0.05} />
         <rect x={divX} y={PAD} width={SVG_W - PAD - divX} height={divY - PAD} fill="#22c55e" fillOpacity={0.05} />
@@ -92,26 +94,33 @@ export function MenuMatrix({ dishes, avgProfitability, avgPopularity, onSelectDi
           const color = QUADRANT_COLORS[dish.quadrant] ?? '#94a3b8'
 
           return (
-            <circle
+            <g
               key={dish.recipeId}
-              cx={cx}
-              cy={cy}
-              r={r}
-              fill={color}
-              fillOpacity={0.7}
-              stroke={color}
-              strokeWidth={1.5}
-              className="cursor-pointer hover:fillOpacity-100 transition-opacity"
-              onMouseEnter={(e) => {
-                const svg = (e.target as SVGCircleElement).closest('svg')!
-                const rect = svg.getBoundingClientRect()
-                const scale = rect.width / SVG_W
-                setTooltip({ dish, x: cx * scale, y: cy * scale })
-              }}
-              onMouseLeave={() => setTooltip(null)}
+              role="button"
+              aria-label={`${dish.name} — ${dish.quadrant}, רווחיות ${dish.profitability.toFixed(1)}%, פופולריות ${dish.popularity}`}
+              tabIndex={0}
               onClick={() => onSelectDish?.(dish)}
-              aria-label={dish.name}
-            />
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelectDish?.(dish) } }}
+              className="cursor-pointer focus:outline-none"
+            >
+              <title>{`${dish.name}: ${dish.quadrant} — רווחיות ${dish.profitability.toFixed(1)}%, פופולריות ${dish.popularity}`}</title>
+              <circle
+                cx={cx}
+                cy={cy}
+                r={r}
+                fill={color}
+                fillOpacity={0.7}
+                stroke={color}
+                strokeWidth={1.5}
+                onMouseEnter={(e) => {
+                  const svg = (e.target as SVGCircleElement).closest('svg')!
+                  const rect = svg.getBoundingClientRect()
+                  const scale = rect.width / SVG_W
+                  setTooltip({ dish, x: cx * scale, y: cy * scale })
+                }}
+                onMouseLeave={() => setTooltip(null)}
+              />
+            </g>
           )
         })}
       </svg>

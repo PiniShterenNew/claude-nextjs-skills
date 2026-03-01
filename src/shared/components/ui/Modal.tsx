@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { cn } from '@/shared/lib/cn'
 
@@ -20,6 +20,15 @@ const sizeStyles = {
   lg: 'max-w-2xl',
 }
 
+const FOCUSABLE = [
+  'a[href]',
+  'button:not([disabled])',
+  'input:not([disabled])',
+  'select:not([disabled])',
+  'textarea:not([disabled])',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ')
+
 export function Modal({
   open,
   onClose,
@@ -29,20 +38,66 @@ export function Modal({
   className,
   size = 'md',
 }: ModalProps) {
+  const panelRef = useRef<HTMLDivElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
+      if (e.key === 'Escape') {
+        onClose()
+        return
+      }
+
+      // Focus trap: cycle Tab / Shift+Tab within the modal
+      if (e.key === 'Tab' && panelRef.current) {
+        const focusable = Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE))
+        if (focusable.length === 0) { e.preventDefault(); return }
+
+        const first = focusable[0]!
+        const last = focusable[focusable.length - 1]!
+
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault()
+            last.focus()
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault()
+            first.focus()
+          }
+        }
+      }
     },
     [onClose]
   )
 
   useEffect(() => {
     if (!open) return
+
+    // Save currently focused element to restore on close
+    previousFocusRef.current = document.activeElement as HTMLElement
+
     document.addEventListener('keydown', handleKeyDown)
     document.body.style.overflow = 'hidden'
+
+    // Move focus into the modal
+    const raf = requestAnimationFrame(() => {
+      if (!panelRef.current) return
+      const first = panelRef.current.querySelector<HTMLElement>(FOCUSABLE)
+      if (first) {
+        first.focus()
+      } else {
+        panelRef.current.focus()
+      }
+    })
+
     return () => {
+      cancelAnimationFrame(raf)
       document.removeEventListener('keydown', handleKeyDown)
       document.body.style.overflow = ''
+      // Restore focus to the element that triggered the modal
+      previousFocusRef.current?.focus()
     }
   }, [open, handleKeyDown])
 
@@ -65,9 +120,11 @@ export function Modal({
 
       {/* Panel */}
       <div
+        ref={panelRef}
+        tabIndex={-1}
         className={cn(
           'relative z-10 w-full mx-4 bg-surface rounded-xl shadow-xl',
-          'border border-border',
+          'border border-border focus:outline-none',
           sizeStyles[size],
           className
         )}

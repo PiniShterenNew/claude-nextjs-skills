@@ -57,7 +57,7 @@ export function Sidebar({ workspaceSlug }: SidebarProps) {
           className="p-1.5 rounded-md text-sidebar-foreground hover:bg-sidebar-hover transition-colors"
           aria-label={sidebarCollapsed ? 'הרחב סרגל' : 'כווץ סרגל'}
         >
-          <span className="material-symbols-outlined text-xl">
+          <span className={`material-symbols-outlined text-xl rtl:rotate-180 transition-transform`}>
             {sidebarCollapsed ? 'chevron_right' : 'chevron_left'}
           </span>
         </button>

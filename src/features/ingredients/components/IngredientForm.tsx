@@ -8,7 +8,7 @@ import { Select } from '@/shared/components/ui/Select'
 import { useIngredientMutations } from '../hooks/useIngredientMutations'
 import { CreateIngredientInputSchema, INGREDIENT_UNITS, type IngredientRow } from '../types'
 import { effectivePrice } from '../utils/effective-price'
-import { formatILS, toDecimal } from '@/shared/lib/decimal'
+import { formatILS } from '@/shared/lib/decimal'
 import { z } from 'zod'
 
 type FormValues = z.input<typeof CreateIngredientInputSchema>

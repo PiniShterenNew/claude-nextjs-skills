@@ -60,8 +60,10 @@ export function RecipeItemRow({ item, onQuantityChange, onRemove }: RecipeItemRo
         </select>
         <button
           onClick={onRemove}
+          onKeyDown={(e) => { if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); onRemove() } }}
           className="p-1.5 text-muted-foreground hover:text-destructive rounded-md transition-colors"
-          aria-label="הסר פריט"
+          aria-label={`הסר ${name}`}
+          title={`הסר ${name} (Delete)`}
         >
           <span className="material-symbols-outlined text-base">close</span>
         </button>

@@ -3,7 +3,6 @@ import { auth } from '@/shared/lib/auth'
 import { prisma } from '@/shared/lib/prisma'
 import { Header } from '@/shared/components/layout/Header'
 import { Card, CardHeader, CardTitle, CardContent } from '@/shared/components/ui/Card'
-import { WorkspaceCreateForm } from '@/features/workspace/components/WorkspaceCreateForm'
 
 export const dynamic = 'force-dynamic'
 

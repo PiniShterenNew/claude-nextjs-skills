@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ניתוח הנדסת תפריט - MenuCost</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        :root {
+            --primary-color: #2563EB;
+            --secondary-color: #1E40AF;
+            --success-color: #10B981;
+            --warning-color: #F59E0B;
+            --danger-color: #EF4444;
+            --bg-color: #F3F4F6;
+            --sidebar-width: 280px;
+        }
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--bg-color);
+        }.matrix-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            background-color: #E5E7EB;
+            border: 2px solid #D1D5DB;
+            position: relative;
+            height: 500px;
+        }
+        .matrix-quadrant {
+            background-color: white;
+            padding: 1rem;
+            position: relative;
+            transition: background-color 0.2s;
+        }
+        .matrix-quadrant:hover {
+            background-color: #F9FAFB;
+        }
+        .matrix-bubble {
+            position: absolute;
+            transform: translate(50%, 50%);border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+        }.chart-container {
+            direction: ltr; 
+        }
+        .matrix-bubble:hover {
+            transform: translate(50%, 50%) scale(1.2);
+            z-index: 20;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }.matrix-bubble .tooltip {
+            visibility: hidden;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #1F2937;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            white-space: nowrap;
+            font-size: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.2s;
+            margin-bottom: 5px;
+            z-index: 30;
+            text-align: right;
+            direction: rtl;
+        }
+        .matrix-bubble:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="text-gray-800 h-screen flex overflow-hidden">
+<aside class="w-[var(--sidebar-width)] bg-white border-l border-gray-200 flex-shrink-0 flex flex-col h-full hidden md:flex">
+<div class="p-6 border-b border-gray-100 flex items-center gap-3">
+<div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">M</div>
+<div>
+<h1 class="font-bold text-lg text-gray-900">MenuCost</h1>
+<p class="text-xs text-gray-500">שליטה בעלויות מזון</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto p-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium">לוח בקרה</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="font-medium">מתכונים</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">grocery</span>
+<span class="font-medium">רכיבים</span>
+</a>
+<div class="pt-4 pb-2 px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">ניתוח ודוחות</div>
+<a class="flex items-center gap-3 px-3 py-2.5 bg-blue-50 text-blue-700 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-medium">הנדסת תפריט</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">trending_up</span>
+<span class="font-medium">ניתוח רווחיות</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-gray-600 rounded-lg hover:bg-gray-50 hover:text-blue-600 transition-colors" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-medium">מלאי</span>
+</a>
+</nav>
+<div class="p-4 border-t border-gray-100">
+<button class="flex items-center gap-3 w-full px-3 py-2 text-gray-600 hover:text-gray-900 transition-colors">
+<img alt="User" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAB5qnFFG8ZqHamOlR8QGPVh_qtQkSPDlhgvYQCicXOlGDNibDL4sLvFcZeDxW6ynZiiXVYrLWayw3SarEVu-1ez2RwnsUDM6G6asxbD_njdkLcGltmTQTgp8pD3epmkmkf1B_62lG6WaYA22LwZwNDoswB9O3M9UlgE0z2JZM1vVntxScbm2uSUnEQYXrsCKa0A57jdO59ZiTlxuIwCkoEdywPSlW23mqEP24-wUADZIEeKoIrGwpcCU9Fe-s2uOWwwvYVKKZNoZE2"/>
+<div class="text-right">
+<p class="text-sm font-medium">דוד כהן</p>
+<p class="text-xs text-gray-500">מסעדת השף</p>
+</div>
+</button>
+</div>
+</aside>
+<main class="flex-1 flex flex-col h-full overflow-hidden relative">
+<header class="bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between">
+<div>
+<h2 class="text-2xl font-bold text-gray-900">הנדסת תפריט (Menu Engineering)</h2>
+<p class="text-sm text-gray-500 mt-1">ניתוח ביצועי מנות לפי רווחיות ופופולריות - רבעון 1, 2024</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 bg-white shadow-sm">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span>30 ימים אחרונים</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 bg-white shadow-sm">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+<span>סינון קטגוריות</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 shadow-sm">
+<span class="material-symbols-outlined text-lg">download</span>
+<span>ייצוא דוח</span>
+</button>
+</div>
+</header>
+<div class="flex-1 overflow-y-auto p-8">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-bold text-gray-900 text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-600">bubble_chart</span>
+                            מטריצת ביצועים
+                        </h3>
+<div class="flex items-center gap-4 text-xs">
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-green-500"></span>כוכבים</div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-blue-500"></span>סוסי עבודה</div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-yellow-500"></span>חידות</div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-full bg-red-500"></span>כלבים</div>
+</div>
+</div>
+<div class="relative pl-10 pb-10">
+<div class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-sm font-medium text-gray-500 tracking-wide whitespace-nowrap">
+                            רווחיות (שולי רווח ₪)
+                        </div>
+<div class="chart-container relative h-[400px] border-l-2 border-b-2 border-gray-300 bg-gray-50 rounded-tr-lg">
+<div class="absolute inset-0 grid grid-cols-2 grid-rows-2">
+<div class="border-r border-b border-dashed border-gray-300 relative group">
+<span class="absolute top-2 left-2 text-xs font-bold text-yellow-600 opacity-50 uppercase tracking-widest">חידות (Puzzles)</span>
+</div>
+<div class="border-b border-dashed border-gray-300 relative">
+<span class="absolute top-2 right-2 text-xs font-bold text-green-600 opacity-50 uppercase tracking-widest">כוכבים (Stars)</span>
+</div>
+<div class="border-r border-dashed border-gray-300 relative">
+<span class="absolute bottom-2 left-2 text-xs font-bold text-red-600 opacity-50 uppercase tracking-widest">כלבים (Dogs)</span>
+</div>
+<div class="relative">
+<span class="absolute bottom-2 right-2 text-xs font-bold text-blue-600 opacity-50 uppercase tracking-widest">סוסי עבודה (Workhorses)</span>
+</div>
+</div>
+<div class="matrix-bubble bg-green-500/90 border-2 border-green-600 w-16 h-16" style="bottom: 70%; left: 75%;">
+<span class="pointer-events-none">המבורגר</span>
+<div class="tooltip">
+<strong>המבורגר קלאסי</strong><br/>
+                                    רווח: ₪45<br/>
+                                    נמכר: 420 יח'
+                                </div>
+</div>
+<div class="matrix-bubble bg-blue-500/90 border-2 border-blue-600 w-14 h-14" style="bottom: 30%; left: 80%;">
+<span class="pointer-events-none">סלט</span>
+<div class="tooltip">
+<strong>סלט קיסר</strong><br/>
+                                    רווח: ₪22<br/>
+                                    נמכר: 350 יח'
+                                </div>
+</div>
+<div class="matrix-bubble bg-yellow-500/90 border-2 border-yellow-600 w-12 h-12" style="bottom: 80%; left: 20%;">
+<span class="pointer-events-none">סטייק</span>
+<div class="tooltip">
+<strong>סטייק אנטריקוט</strong><br/>
+                                    רווח: ₪85<br/>
+                                    נמכר: 45 יח'
+                                </div>
+</div>
+<div class="matrix-bubble bg-red-500/90 border-2 border-red-600 w-10 h-10" style="bottom: 20%; left: 25%;">
+<span class="pointer-events-none">מרק</span>
+<div class="tooltip">
+<strong>מרק היום</strong><br/>
+                                    רווח: ₪12<br/>
+                                    נמכר: 30 יח'
+                                </div>
+</div>
+<div class="matrix-bubble bg-green-500/90 border-2 border-green-600 w-14 h-14" style="bottom: 65%; left: 60%;">
+<span class="pointer-events-none">פסטה</span>
+<div class="tooltip">
+<strong>פסטה רוזה</strong><br/>
+                                    רווח: ₪38<br/>
+                                    נמכר: 280 יח'
+                                </div>
+</div>
+<div class="matrix-bubble bg-yellow-500/90 border-2 border-yellow-600 w-10 h-10" style="bottom: 60%; left: 35%;">
+<span class="pointer-events-none">דג</span>
+<div class="tooltip">
+<strong>פילה דניס</strong><br/>
+                                    רווח: ₪60<br/>
+                                    נמכר: 60 יח'
+                                </div>
+</div>
+</div>
+<div class="absolute bottom-0 w-full text-center text-sm font-medium text-gray-500 mt-4">
+                            פופולריות (כמות מכירות)
+                        </div>
+</div>
+</div>
+<div class="space-y-6">
+<div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+<h3 class="font-bold text-gray-900 mb-4">תובנות מהירות</h3>
+<div class="space-y-4">
+<div class="flex items-start gap-3 p-3 bg-green-50 rounded-lg border border-green-100">
+<span class="material-symbols-outlined text-green-600 mt-0.5">star</span>
+<div>
+<p class="text-sm font-bold text-gray-900">יש לשמר: המבורגר קלאסי</p>
+<p class="text-xs text-gray-600 mt-1">מנה מנצחת עם רווחיות גבוהה וביקוש גבוה. ודא איכות עקבית.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-yellow-50 rounded-lg border border-yellow-100">
+<span class="material-symbols-outlined text-yellow-600 mt-0.5">extension</span>
+<div>
+<p class="text-sm font-bold text-gray-900">יש לקדם: סטייק אנטריקוט</p>
+<p class="text-xs text-gray-600 mt-1">רווחיות מצוינת אך מכירות נמוכות. שקול להבליט בתפריט או להוריד מחיר מעט.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
+<span class="material-symbols-outlined text-blue-600 mt-0.5">work_history</span>
+<div>
+<p class="text-sm font-bold text-gray-900">ייעול עלויות: סלט קיסר</p>
+<p class="text-xs text-gray-600 mt-1">פופולרי מאוד אך רווחיות נמוכה. בדוק אפשרות להוזיל עלות חומרי גלם.</p>
+</div>
+</div>
+<div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-100">
+<span class="material-symbols-outlined text-red-600 mt-0.5">delete</span>
+<div>
+<p class="text-sm font-bold text-gray-900">לשקול הסרה: מרק היום</p>
+<p class="text-xs text-gray-600 mt-1">לא רווחי ולא פופולרי. תופס מקום בתפריט וגורם לבזבוז.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl shadow-lg p-6 text-white">
+<h4 class="font-bold text-lg mb-2">צריכים עזרה?</h4>
+<p class="text-blue-100 text-sm mb-4">המומחים הקולינריים שלנו יכולים לעזור לך לנתח את הנתונים ולשפר את התפריט.</p>
+<button class="bg-white text-blue-700 text-sm font-bold py-2 px-4 rounded-lg hover:bg-blue-50 transition-colors w-full">
+                            קבע פגישת ייעוץ
+                        </button>
+</div>
+</div>
+</div>
+<div class="mt-8 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+<div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+<h3 class="font-bold text-gray-900">פירוט מנות והמלצות פעולה</h3>
+<div class="flex gap-2">
+<input class="text-sm border-gray-300 rounded-md focus:border-blue-500 focus:ring-blue-500 px-3 py-1.5" placeholder="חיפוש מנה..." type="text"/>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-right">
+<thead>
+<tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+<th class="px-6 py-3 font-medium">שם המנה</th>
+<th class="px-6 py-3 font-medium">קטגוריה</th>
+<th class="px-6 py-3 font-medium">עלות מזון %</th>
+<th class="px-6 py-3 font-medium">רווח למנה</th>
+<th class="px-6 py-3 font-medium">כמות נמכרת</th>
+<th class="px-6 py-3 font-medium">סיווג</th>
+<th class="px-6 py-3 font-medium">פעולה מומלצת</th>
+<th class="px-6 py-3 font-medium"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100 text-sm">
+<tr class="hover:bg-gray-50 group">
+<td class="px-6 py-4 font-medium text-gray-900">המבורגר קלאסי</td>
+<td class="px-6 py-4 text-gray-500">עיקריות</td>
+<td class="px-6 py-4 text-green-600 font-bold">28%</td>
+<td class="px-6 py-4">₪45.00</td>
+<td class="px-6 py-4">420</td>
+<td class="px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">כוכב</span></td>
+<td class="px-6 py-4 text-gray-600">שמור על איכות גבוהה</td>
+<td class="px-6 py-4 text-left">
+<button class="text-gray-400 hover:text-blue-600"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 group">
+<td class="px-6 py-4 font-medium text-gray-900">סטייק אנטריקוט</td>
+<td class="px-6 py-4 text-gray-500">עיקריות</td>
+<td class="px-6 py-4 text-green-600 font-bold">32%</td>
+<td class="px-6 py-4">₪85.00</td>
+<td class="px-6 py-4">45</td>
+<td class="px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">חידה</span></td>
+<td class="px-6 py-4 text-gray-600">קדם מכירות / שפר נראות</td>
+<td class="px-6 py-4 text-left">
+<button class="text-gray-400 hover:text-blue-600"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 group">
+<td class="px-6 py-4 font-medium text-gray-900">סלט קיסר</td>
+<td class="px-6 py-4 text-gray-500">ראשונות</td>
+<td class="px-6 py-4 text-red-500 font-bold">42%</td>
+<td class="px-6 py-4">₪22.00</td>
+<td class="px-6 py-4">350</td>
+<td class="px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">סוס עבודה</span></td>
+<td class="px-6 py-4 text-gray-600">העלה מחיר / הקטן מנה</td>
+<td class="px-6 py-4 text-left">
+<button class="text-gray-400 hover:text-blue-600"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 group">
+<td class="px-6 py-4 font-medium text-gray-900">מרק היום</td>
+<td class="px-6 py-4 text-gray-500">ראשונות</td>
+<td class="px-6 py-4 text-yellow-600 font-bold">35%</td>
+<td class="px-6 py-4">₪12.00</td>
+<td class="px-6 py-4">30</td>
+<td class="px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">כלב</span></td>
+<td class="px-6 py-4 text-gray-600">הסר מהתפריט</td>
+<td class="px-6 py-4 text-left">
+<button class="text-gray-400 hover:text-blue-600"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 group">
+<td class="px-6 py-4 font-medium text-gray-900">פסטה רוזה</td>
+<td class="px-6 py-4 text-gray-500">עיקריות</td>
+<td class="px-6 py-4 text-green-600 font-bold">25%</td>
+<td class="px-6 py-4">₪38.00</td>
+<td class="px-6 py-4">280</td>
+<td class="px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">כוכב</span></td>
+<td class="px-6 py-4 text-gray-600">שמור על יציבות</td>
+<td class="px-6 py-4 text-left">
+<button class="text-gray-400 hover:text-blue-600"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 group">
+<td class="px-6 py-4 font-medium text-gray-900">פילה דניס</td>
+<td class="px-6 py-4 text-gray-500">עיקריות</td>
+<td class="px-6 py-4 text-green-600 font-bold">29%</td>
+<td class="px-6 py-4">₪60.00</td>
+<td class="px-6 py-4">60</td>
+<td class="px-6 py-4"><span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">חידה</span></td>
+<td class="px-6 py-4 text-gray-600">בדוק גמישות מחיר</td>
+<td class="px-6 py-4 text-left">
+<button class="text-gray-400 hover:text-blue-600"><span class="material-symbols-outlined text-lg">edit</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-gray-100 flex items-center justify-between text-sm text-gray-500">
+<div>מציג 1-6 מתוך 24 מנות</div>
+<div class="flex gap-1">
+<button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50">הקודם</button>
+<button class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-200 rounded">1</button>
+<button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">2</button>
+<button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">3</button>
+<button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50">הבא</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

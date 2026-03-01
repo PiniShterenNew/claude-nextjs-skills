@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MenuCost - ניהול חומרי גלם</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+        :root {
+            --primary: #2563EB;
+            --primary-hover: #1D4ED8;
+            --secondary: #64748B;
+            --bg-body: #F8FAFC;
+            --surface: #FFFFFF;
+            --border: #E2E8F0;
+        }
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--bg-body);
+            color: #0F172A;
+        }
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24;
+            font-size: 20px;
+            vertical-align: middle;
+        }.custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden">
+<header class="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 z-20 shrink-0">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-600 !text-3xl">restaurant_menu</span>
+<h1 class="text-xl font-bold text-gray-900 tracking-tight">MenuCost</h1>
+</div>
+<nav class="hidden md:flex items-center gap-1 text-sm font-medium text-gray-500">
+<a class="px-3 py-2 text-gray-900 bg-gray-100 rounded-md" href="#">חומרי גלם</a>
+<a class="px-3 py-2 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors" href="#">מתכונים</a>
+<a class="px-3 py-2 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors" href="#">דוחות</a>
+<a class="px-3 py-2 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors" href="#">הגדרות</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 text-sm text-gray-600 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+<span class="w-2 h-2 rounded-full bg-green-500"></span>
+<span>קפה ומאפה ת״א</span>
+<span class="material-symbols-outlined !text-lg">expand_more</span>
+</div>
+<button class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+                ד
+            </button>
+</div>
+</header>
+<main class="flex-1 flex overflow-hidden">
+<section class="flex-1 flex flex-col min-w-0 bg-gray-50/50">
+<div class="px-6 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="text-2xl font-bold text-gray-900">ניהול חומרי גלם</h2>
+<p class="text-sm text-gray-500 mt-1">נהל את עלויות המזון ופרטי הספקים שלך במקום אחד</p>
+</div>
+<div class="flex items-center gap-3">
+<div class="relative group">
+<span class="material-symbols-outlined absolute right-3 top-2.5 text-gray-400 group-focus-within:text-blue-500 transition-colors">search</span>
+<input class="pr-10 pl-4 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 w-64 transition-shadow shadow-sm" placeholder="חיפוש חומר גלם..." type="text"/>
+</div>
+<button class="flex items-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+<span class="material-symbols-outlined">filter_list</span>
+                        סינון
+                    </button>
+<button class="flex items-center gap-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+<span class="material-symbols-outlined">download</span>
+                        ייצוא
+                    </button>
+</div>
+</div>
+<div class="flex-1 px-6 pb-6 overflow-hidden">
+<div class="bg-white border border-gray-200 rounded-xl shadow-sm h-full flex flex-col">
+<div class="overflow-auto custom-scrollbar flex-1">
+<table class="w-full text-sm text-right">
+<thead class="bg-gray-50 text-gray-600 font-medium sticky top-0 z-10">
+<tr>
+<th class="px-6 py-3 border-b border-gray-200 w-1/4 text-right">שם חומר גלם</th>
+<th class="px-6 py-3 border-b border-gray-200 text-right">יחידה</th>
+<th class="px-6 py-3 border-b border-gray-200 text-right">ספק</th>
+<th class="px-6 py-3 border-b border-gray-200 text-right">מחיר ליחידה</th>
+<th class="px-6 py-3 border-b border-gray-200 text-right">פחת %</th>
+<th class="px-6 py-3 border-b border-gray-200 text-right">מחיר אפקטיבי</th>
+<th class="px-6 py-3 border-b border-gray-200 text-right">עודכן לאחרונה</th>
+<th class="px-6 py-3 border-b border-gray-200 w-10"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-100">
+<tr class="hover:bg-blue-50/50 group transition-colors cursor-pointer">
+<td class="px-6 py-3.5">
+<div class="font-medium text-gray-900">קמח לבן בהיר</div>
+<div class="text-xs text-gray-500">ID: ING-001</div>
+</td>
+<td class="px-6 py-3.5 text-gray-600">ק״ג</td>
+<td class="px-6 py-3.5 text-gray-600">שטיבל</td>
+<td class="px-6 py-3.5 font-medium text-gray-900">₪4.50</td>
+<td class="px-6 py-3.5 text-gray-600">0%</td>
+<td class="px-6 py-3.5 font-bold text-gray-900">₪4.50</td>
+<td class="px-6 py-3.5 text-gray-500 text-xs">10/10/2023</td>
+<td class="px-6 py-3.5 text-left">
+<button class="text-gray-400 hover:text-blue-600 p-1 rounded hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/50 group transition-colors cursor-pointer bg-blue-50/30">
+<td class="px-6 py-3.5">
+<div class="font-medium text-blue-700">עגבניות שרי תמר</div>
+<div class="text-xs text-blue-400">ID: ING-042</div>
+</td>
+<td class="px-6 py-3.5 text-gray-600">ק״ג</td>
+<td class="px-6 py-3.5 text-gray-600">ירקות העמק</td>
+<td class="px-6 py-3.5 font-medium text-gray-900">₪12.00</td>
+<td class="px-6 py-3.5 text-red-600 font-medium">5%</td>
+<td class="px-6 py-3.5 font-bold text-gray-900">₪12.60</td>
+<td class="px-6 py-3.5 text-gray-500 text-xs">היום, 09:30</td>
+<td class="px-6 py-3.5 text-left">
+<button class="text-blue-600 p-1 rounded hover:bg-blue-100 transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/50 group transition-colors cursor-pointer">
+<td class="px-6 py-3.5">
+<div class="font-medium text-gray-900">שמן זית כתית מעולה</div>
+<div class="text-xs text-gray-500">ID: ING-105</div>
+</td>
+<td class="px-6 py-3.5 text-gray-600">ליטר</td>
+<td class="px-6 py-3.5 text-gray-600">זיתא</td>
+<td class="px-6 py-3.5 font-medium text-gray-900">₪38.00</td>
+<td class="px-6 py-3.5 text-gray-600">0%</td>
+<td class="px-6 py-3.5 font-bold text-gray-900">₪38.00</td>
+<td class="px-6 py-3.5 text-gray-500 text-xs">05/10/2023</td>
+<td class="px-6 py-3.5 text-left">
+<button class="text-gray-400 hover:text-blue-600 p-1 rounded hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/50 group transition-colors cursor-pointer">
+<td class="px-6 py-3.5">
+<div class="font-medium text-gray-900">אבוקדו האס</div>
+<div class="text-xs text-gray-500">ID: ING-089</div>
+</td>
+<td class="px-6 py-3.5 text-gray-600">ק״ג</td>
+<td class="px-6 py-3.5 text-gray-600">שוק סיטונאי</td>
+<td class="px-6 py-3.5 font-medium text-gray-900">₪18.50</td>
+<td class="px-6 py-3.5 text-red-600 font-medium">15%</td>
+<td class="px-6 py-3.5 font-bold text-gray-900">₪21.28</td>
+<td class="px-6 py-3.5 text-gray-500 text-xs">אתמול</td>
+<td class="px-6 py-3.5 text-left">
+<button class="text-gray-400 hover:text-blue-600 p-1 rounded hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/50 group transition-colors cursor-pointer">
+<td class="px-6 py-3.5">
+<div class="font-medium text-gray-900">סלמון נורבגי טרי</div>
+<div class="text-xs text-gray-500">ID: ING-202</div>
+</td>
+<td class="px-6 py-3.5 text-gray-600">ק״ג</td>
+<td class="px-6 py-3.5 text-gray-600">דגי הים התיכון</td>
+<td class="px-6 py-3.5 font-medium text-gray-900">₪85.00</td>
+<td class="px-6 py-3.5 text-red-600 font-medium">10%</td>
+<td class="px-6 py-3.5 font-bold text-gray-900">₪93.50</td>
+<td class="px-6 py-3.5 text-gray-500 text-xs">היום, 08:00</td>
+<td class="px-6 py-3.5 text-left">
+<button class="text-gray-400 hover:text-blue-600 p-1 rounded hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/50 group transition-colors cursor-pointer">
+<td class="px-6 py-3.5">
+<div class="font-medium text-gray-900">בזיליקום טרי</div>
+<div class="text-xs text-gray-500">ID: ING-112</div>
+</td>
+<td class="px-6 py-3.5 text-gray-600">מארז</td>
+<td class="px-6 py-3.5 text-gray-600">עלי כותרת</td>
+<td class="px-6 py-3.5 font-medium text-gray-900">₪6.00</td>
+<td class="px-6 py-3.5 text-gray-600">0%</td>
+<td class="px-6 py-3.5 font-bold text-gray-900">₪6.00</td>
+<td class="px-6 py-3.5 text-gray-500 text-xs">לפני יומיים</td>
+<td class="px-6 py-3.5 text-left">
+<button class="text-gray-400 hover:text-blue-600 p-1 rounded hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/50 group transition-colors cursor-pointer">
+<td class="px-6 py-3.5">
+<div class="font-medium text-gray-900">פרמזן רג'יאנו</div>
+<div class="text-xs text-gray-500">ID: ING-330</div>
+</td>
+<td class="px-6 py-3.5 text-gray-600">ק״ג</td>
+<td class="px-6 py-3.5 text-gray-600">גבינות המרכז</td>
+<td class="px-6 py-3.5 font-medium text-gray-900">₪95.00</td>
+<td class="px-6 py-3.5 text-gray-600">0%</td>
+<td class="px-6 py-3.5 font-bold text-gray-900">₪95.00</td>
+<td class="px-6 py-3.5 text-gray-500 text-xs">01/10/2023</td>
+<td class="px-6 py-3.5 text-left">
+<button class="text-gray-400 hover:text-blue-600 p-1 rounded hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-blue-50/50 group transition-colors cursor-pointer">
+<td class="px-6 py-3.5">
+<div class="font-medium text-gray-900">שמנת מתוקה 38%</div>
+<div class="text-xs text-gray-500">ID: ING-401</div>
+</td>
+<td class="px-6 py-3.5 text-gray-600">ליטר</td>
+<td class="px-6 py-3.5 text-gray-600">תנובה</td>
+<td class="px-6 py-3.5 font-medium text-gray-900">₪24.00</td>
+<td class="px-6 py-3.5 text-gray-600">0%</td>
+<td class="px-6 py-3.5 font-bold text-gray-900">₪24.00</td>
+<td class="px-6 py-3.5 text-gray-500 text-xs">היום, 10:00</td>
+<td class="px-6 py-3.5 text-left">
+<button class="text-gray-400 hover:text-blue-600 p-1 rounded hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition-all">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="border-t border-gray-200 px-6 py-4 flex items-center justify-between">
+<div class="text-sm text-gray-500">
+                            מציג <span class="font-medium text-gray-900">1</span> עד <span class="font-medium text-gray-900">8</span> מתוך <span class="font-medium text-gray-900">124</span> תוצאות
+                        </div>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 text-gray-500 disabled:opacity-50" disabled="">הקודם</button>
+<button class="px-3 py-1 bg-blue-50 border border-blue-200 text-blue-600 rounded font-medium">1</button>
+<button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 text-gray-600">2</button>
+<button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 text-gray-600">3</button>
+<span class="px-2 text-gray-400">...</span>
+<button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 text-gray-600">16</button>
+<button class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-50 text-gray-600">הבא</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<aside class="w-[420px] bg-white border-r border-gray-200 shadow-2xl z-10 flex flex-col h-full shrink-0">
+<div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-white">
+<h3 class="text-lg font-bold text-gray-900">עריכת חומר גלם</h3>
+<div class="flex gap-2">
+<button class="text-gray-400 hover:text-gray-600 transition-colors">
+<span class="material-symbols-outlined">delete</span>
+</button>
+<button class="text-gray-400 hover:text-gray-600 transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto px-6 py-6 custom-scrollbar">
+<form class="space-y-6">
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide">פרטים בסיסיים</h4>
+<span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">פעיל</span>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="ing-name">שם חומר הגלם</label>
+<input class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-gray-900" id="ing-name" type="text" value="עגבניות שרי תמר"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="ing-supplier">ספק ראשי</label>
+<select class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-gray-900 bg-white" id="ing-supplier">
+<option>ירקות העמק</option>
+<option>שופרסל</option>
+<option>ביכורי שדה</option>
+<option>אחר...</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1" for="ing-cat">קטגוריה</label>
+<select class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm text-gray-900 bg-white" id="ing-cat">
+<option>ירקות ופירות</option>
+<option>יבשים</option>
+<option>בשר ודגים</option>
+<option>מוצרי חלב</option>
+</select>
+</div>
+</div>
+</div>
+<hr class="border-gray-100"/>
+<div class="space-y-4">
+<h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide">תמחור ומדידה</h4>
+<div class="bg-blue-50 rounded-lg p-4 border border-blue-100">
+<div class="flex gap-4">
+<div class="w-1/3">
+<label class="block text-xs font-medium text-blue-800 mb-1">יחידת מידה</label>
+<select class="w-full rounded border-blue-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-1.5">
+<option>ק״ג</option>
+<option>גרם</option>
+<option>ליטר</option>
+<option>יחידה</option>
+</select>
+</div>
+<div class="w-2/3">
+<label class="block text-xs font-medium text-blue-800 mb-1">מחיר ליחידה (₪)</label>
+<div class="relative">
+<span class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none text-blue-400">₪</span>
+<input class="w-full rounded border-blue-200 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-sm py-1.5 pr-7 font-bold text-blue-900" type="number" value="12.00"/>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block text-sm font-medium text-gray-700 mb-1 flex items-center gap-1">
+                                    אחוז פחת
+                                    <span class="material-symbols-outlined !text-sm text-gray-400" title="אחוז מהמוצר שנזרק בעת הניקוי/הכנה">help</span>
+</label>
+<div class="relative">
+<input class="w-full rounded-lg border-red-200 bg-red-50 text-red-900 shadow-sm focus:border-red-500 focus:ring-red-500 sm:text-sm pl-8 font-medium" type="number" value="5"/>
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-red-500">%</span>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-gray-500 mb-1">מחיר נטו אפקטיבי</label>
+<div class="w-full py-2 px-3 bg-gray-100 rounded-lg border border-gray-200 text-gray-900 font-bold text-sm">
+                                    ₪12.60
+                                </div>
+</div>
+</div>
+</div>
+<hr class="border-gray-100"/>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<h4 class="text-sm font-bold text-gray-900 uppercase tracking-wide">שימוש במתכונים</h4>
+<span class="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">3 מתכונים</span>
+</div>
+<div class="bg-white border border-gray-200 rounded-lg divide-y divide-gray-100">
+<div class="p-3 flex justify-between items-center hover:bg-gray-50">
+<span class="text-sm text-gray-700">סלט יווני</span>
+<span class="text-xs text-gray-500">120 גרם</span>
+</div>
+<div class="p-3 flex justify-between items-center hover:bg-gray-50">
+<span class="text-sm text-gray-700">פסטה פומודורו</span>
+<span class="text-xs text-gray-500">80 גרם</span>
+</div>
+<div class="p-3 flex justify-between items-center hover:bg-gray-50">
+<span class="text-sm text-gray-700">שקשוקה</span>
+<span class="text-xs text-gray-500">150 גרם</span>
+</div>
+</div>
+<div class="bg-yellow-50 border border-yellow-100 rounded-md p-3 flex gap-3 items-start">
+<span class="material-symbols-outlined text-yellow-600 !text-xl mt-0.5">warning</span>
+<p class="text-xs text-yellow-800 leading-relaxed">
+                                 שינוי המחיר ישפיע על עלות המזון (Food Cost) של 3 מתכונים. המתכון "שקשוקה" עלול לחרוג מהיעד.
+                             </p>
+</div>
+</div>
+</form>
+</div>
+<div class="px-6 py-4 border-t border-gray-200 bg-gray-50 flex items-center justify-end gap-3 mt-auto">
+<button class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-200 rounded-lg transition-colors">
+                    ביטול
+                </button>
+<button class="px-6 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined !text-lg">save</span>
+                    שמור שינויים
+                </button>
+</div>
+</aside>
+</main>
+
+</body></html>

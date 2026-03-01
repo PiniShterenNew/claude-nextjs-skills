@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MenuCost - בונה מתכונים</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #e2e8f0;
+        }
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--bg-body);
+            color: #0f172a;
+        }::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<nav class="bg-white border-b border-[var(--border-color)] h-16 flex items-center px-6 justify-between sticky top-0 z-30">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-2 text-[var(--primary)] font-bold text-xl">
+<span class="material-symbols-outlined text-3xl">restaurant_menu</span>
+<span>MenuCost</span>
+</div>
+<div class="hidden md:flex items-center gap-6 text-sm font-medium text-[var(--secondary)]">
+<a class="hover:text-[var(--primary)] transition-colors" href="#">לוח בקרה</a>
+<a class="text-[var(--primary)]" href="#">מתכונים</a>
+<a class="hover:text-[var(--primary)] transition-colors" href="#">חומרי גלם</a>
+<a class="hover:text-[var(--primary)] transition-colors" href="#">תפריטים</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 rounded-full hover:bg-slate-100 text-[var(--secondary)] relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-sm font-bold text-slate-600 cursor-pointer">
+                ד.כ
+            </div>
+</div>
+</nav>
+<main class="flex-1 w-full max-w-[1600px] mx-auto p-4 md:p-6 lg:p-8 flex flex-col lg:flex-row gap-6">
+<div class="flex-1 flex flex-col gap-6">
+<div class="bg-[var(--bg-card)] rounded-xl shadow-sm border border-[var(--border-color)] p-6">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h1 class="text-2xl font-bold text-slate-900">עריכת מתכון</h1>
+<p class="text-sm text-slate-500">הגדרת מרכיבים וחישוב עלויות בזמן אמת</p>
+</div>
+<div class="flex gap-2">
+<button class="px-4 py-2 text-slate-600 border border-slate-300 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">ביטול</button>
+<button class="px-4 py-2 bg-[var(--primary)] text-white rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">save</span>
+                            שמירה
+                        </button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="md:col-span-2">
+<label class="block text-sm font-medium text-slate-700 mb-1">שם המתכון</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right" type="text" value="המבורגר קלאסי 220 גרם"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1">קטגוריה</label>
+<select class="w-full rounded-lg border-slate-300 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right">
+<option>עיקריות</option>
+<option>ראשונות</option>
+<option>קינוחים</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1">כמות (מנות)</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right" type="number" value="1"/>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-slate-100 grid grid-cols-1 md:grid-cols-4 gap-6">
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1">מחיר מכירה (₪)</label>
+<div class="relative">
+<input class="w-full rounded-lg border-slate-300 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right pr-4 pl-8" type="number" value="68.00"/>
+<span class="absolute left-3 top-2.5 text-slate-400 text-sm">₪</span>
+</div>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1">מע"מ (%)</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right bg-slate-50" type="number" value="17"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1">עלות עבודה משוערת</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right" type="number" value="5.00"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-slate-700 mb-1">תקורה כללית</label>
+<input class="w-full rounded-lg border-slate-300 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right" type="number" value="2.50"/>
+</div>
+</div>
+</div>
+<div class="bg-[var(--bg-card)] rounded-xl shadow-sm border border-[var(--border-color)] flex flex-col min-h-[400px]">
+<div class="p-4 border-b border-slate-100 flex justify-between items-center bg-slate-50 rounded-t-xl">
+<h3 class="font-bold text-slate-800 flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-500">list</span>
+                        מרכיבי המתכון
+                    </h3>
+<div class="flex gap-2">
+<button class="text-sm text-[var(--primary)] font-medium hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            הוסף תת-מתכון
+                        </button>
+<button class="text-sm bg-[var(--primary)] text-white font-medium hover:bg-[var(--primary-hover)] px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            הוסף חומר גלם
+                        </button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-4 px-6 py-3 text-xs font-semibold text-slate-500 border-b border-slate-100 bg-slate-50/50">
+<div class="col-span-1 text-center">#</div>
+<div class="col-span-4">שם הפריט</div>
+<div class="col-span-2">כמות</div>
+<div class="col-span-2">יחידה</div>
+<div class="col-span-2 text-left pl-2">עלות (₪)</div>
+<div class="col-span-1"></div>
+</div>
+<div class="flex-1 flex flex-col divide-y divide-slate-100">
+<div class="group grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-blue-50/30 transition-colors">
+<div class="col-span-1 flex items-center justify-center text-slate-400 cursor-move">
+<span class="material-symbols-outlined text-lg">drag_indicator</span>
+</div>
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-orange-100 text-orange-600 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-lg">egg</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900">בשר בקר טחון (אנטריקוט)</span>
+<span class="text-xs text-slate-400">חומר גלם • ספק: מחסני בשר</span>
+</div>
+</div>
+<div class="col-span-2">
+<input class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right" type="number" value="220"/>
+</div>
+<div class="col-span-2">
+<select class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right">
+<option>גרם</option>
+<option>ק"ג</option>
+</select>
+</div>
+<div class="col-span-2 text-left pl-2 font-medium text-slate-700">
+                            14.30
+                        </div>
+<div class="col-span-1 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-slate-400 hover:text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="group grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-blue-50/30 transition-colors bg-purple-50/20">
+<div class="col-span-1 flex items-center justify-center text-slate-400 cursor-move">
+<span class="material-symbols-outlined text-lg">drag_indicator</span>
+</div>
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-lg">soup_kitchen</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900">רוטב הבית סודי</span>
+<span class="text-xs text-purple-500 font-medium">תת-מתכון • תשואה: 95%</span>
+</div>
+</div>
+<div class="col-span-2">
+<input class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right" type="number" value="30"/>
+</div>
+<div class="col-span-2">
+<select class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right">
+<option>מ"ל</option>
+<option>ליטר</option>
+</select>
+</div>
+<div class="col-span-2 text-left pl-2 font-medium text-slate-700">
+                            2.10
+                        </div>
+<div class="col-span-1 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-slate-400 hover:text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="group grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-blue-50/30 transition-colors">
+<div class="col-span-1 flex items-center justify-center text-slate-400 cursor-move">
+<span class="material-symbols-outlined text-lg">drag_indicator</span>
+</div>
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-lg">eco</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900">לחמניית המבורגר בריוש</span>
+<span class="text-xs text-slate-400">חומר גלם • יחידה</span>
+</div>
+</div>
+<div class="col-span-2">
+<input class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right" type="number" value="1"/>
+</div>
+<div class="col-span-2">
+<select class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right">
+<option>יחידה</option>
+</select>
+</div>
+<div class="col-span-2 text-left pl-2 font-medium text-slate-700">
+                            3.50
+                        </div>
+<div class="col-span-1 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-slate-400 hover:text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="group grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-blue-50/30 transition-colors">
+<div class="col-span-1 flex items-center justify-center text-slate-400 cursor-move">
+<span class="material-symbols-outlined text-lg">drag_indicator</span>
+</div>
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-yellow-100 text-yellow-600 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-lg">local_pizza</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900">גבינת צ'דר</span>
+<span class="text-xs text-slate-400">חומר גלם • פחת: 0%</span>
+</div>
+</div>
+<div class="col-span-2">
+<input class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right" type="number" value="1"/>
+</div>
+<div class="col-span-2">
+<select class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right">
+<option>פרוסה</option>
+<option>גרם</option>
+</select>
+</div>
+<div class="col-span-2 text-left pl-2 font-medium text-slate-700">
+                            1.20
+                        </div>
+<div class="col-span-1 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-slate-400 hover:text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="group grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-blue-50/30 transition-colors">
+<div class="col-span-1 flex items-center justify-center text-slate-400 cursor-move">
+<span class="material-symbols-outlined text-lg">drag_indicator</span>
+</div>
+<div class="col-span-4 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-red-100 text-red-600 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-lg">grocery</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-medium text-slate-900">עגבניה</span>
+<span class="text-xs text-slate-400">חומר גלם • פחת: 10%</span>
+</div>
+</div>
+<div class="col-span-2">
+<input class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right" type="number" value="40"/>
+</div>
+<div class="col-span-2">
+<select class="w-full text-sm py-1 px-2 rounded border-slate-200 focus:border-[var(--primary)] focus:ring-[var(--primary)] text-right">
+<option>גרם</option>
+</select>
+</div>
+<div class="col-span-2 text-left pl-2 font-medium text-slate-700">
+                            0.45
+                        </div>
+<div class="col-span-1 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-slate-400 hover:text-red-500">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<div class="p-4 bg-slate-50 border-t border-slate-200 border-dashed m-2 rounded-lg flex justify-center cursor-pointer hover:bg-slate-100 transition-colors">
+<span class="text-sm text-slate-500 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+                             לחץ כאן להוספת פריט חדש
+                         </span>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full lg:w-[360px] flex-shrink-0">
+<div class="sticky top-24 flex flex-col gap-6">
+<div class="bg-[var(--bg-card)] rounded-xl shadow-lg border border-slate-200 overflow-hidden">
+<div class="bg-slate-900 p-4 text-white">
+<h2 class="font-bold text-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-[var(--success)]">calculate</span>
+                            ניתוח עלויות
+                        </h2>
+<p class="text-slate-400 text-xs mt-1">מתעדכן בזמן אמת</p>
+</div>
+<div class="p-6 flex flex-col gap-6">
+<div class="flex justify-between items-end border-b border-dashed border-slate-200 pb-4">
+<div>
+<span class="text-sm text-slate-500 block mb-1">עלות חומרי גלם (Food Cost)</span>
+<div class="text-3xl font-bold text-slate-800">21.55 ₪</div>
+</div>
+<div class="text-right">
+<span class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">
+<span class="material-symbols-outlined text-[14px]">trending_down</span>
+                                    תקין
+                                </span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">עלות עבודה + תקורה</span>
+<span class="font-medium text-slate-700">7.50 ₪</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-slate-500">סה"כ עלות מנה</span>
+<span class="font-bold text-slate-900">29.05 ₪</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3 mt-2">
+<div class="bg-blue-50 p-3 rounded-lg border border-blue-100 text-center">
+<span class="text-xs text-blue-600 font-medium block mb-1">אחוז עלות מזון</span>
+<span class="text-xl font-bold text-blue-700">31.7%</span>
+<span class="text-[10px] text-blue-400 block mt-1">יעד: 30%-33%</span>
+</div>
+<div class="bg-emerald-50 p-3 rounded-lg border border-emerald-100 text-center">
+<span class="text-xs text-emerald-600 font-medium block mb-1">רווח גולמי</span>
+<span class="text-xl font-bold text-emerald-700">46.45 ₪</span>
+<span class="text-[10px] text-emerald-500 block mt-1">לפני מע"מ</span>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span class="text-slate-500">רווח נקי (משוער)</span>
+<span class="text-slate-900 font-bold">57%</span>
+</div>
+<div class="w-full bg-slate-100 rounded-full h-2.5">
+<div class="bg-slate-800 h-2.5 rounded-full" style="width: 57%"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3 items-start">
+<span class="material-symbols-outlined text-amber-500 shrink-0">warning</span>
+<div>
+<h4 class="text-sm font-bold text-amber-800">שים לב!</h4>
+<p class="text-xs text-amber-700 mt-1 leading-relaxed">
+                            עלות ה"עגבניה" עלתה ב-15% בשבוע האחרון. מומלץ לבדוק ספקים חלופיים.
+                        </p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-[var(--primary)] mb-1">print</span>
+<span class="text-xs font-medium text-slate-600">הדפס דוח</span>
+</button>
+<button class="flex flex-col items-center justify-center p-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors group">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-[var(--primary)] mb-1">history</span>
+<span class="text-xs font-medium text-slate-600">היסטוריית מחירים</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

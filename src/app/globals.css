@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Brand / Primary */
+  --color-primary: #2563EB;
+  --color-primary-hover: #1D4ED8;
+  --color-primary-dark: #1E40AF;
+  --color-primary-foreground: #FFFFFF;
+  --color-primary-subtle: #EFF6FF;
+
+  /* Backgrounds */
+  --color-background: #F1F5F9;
+  --color-surface: #FFFFFF;
+  --color-surface-subtle: #F8FAFC;
+  --color-surface-elevated: #FFFFFF;
+
+  /* Sidebar */
+  --color-sidebar: #0F172A;
+  --color-sidebar-hover: #1E293B;
+  --color-sidebar-foreground: #CBD5E1;
+  --color-sidebar-muted: #64748B;
+
+  /* Text */
+  --color-foreground: #0F172A;
+  --color-foreground-secondary: #1E293B;
+  --color-muted-foreground: #64748B;
+
+  /* Borders */
+  --color-border: #E2E8F0;
+  --color-border-subtle: #F1F5F9;
+  --color-border-focus: #2563EB;
+
+  /* Semantic */
+  --color-success: #22C55E;
+  --color-success-subtle: #DCFCE7;
+  --color-success-foreground: #15803D;
+  --color-warning: #EAB308;
+  --color-warning-subtle: #FEF9C3;
+  --color-warning-foreground: #A16207;
+  --color-error: #EF4444;
+  --color-error-subtle: #FEE2E2;
+  --color-error-foreground: #B91C1C;
+  --color-orange-subtle: #FFF7ED;
+  --color-orange-border: #FFEDD5;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+}
+
+@layer base {
+  html {
+    direction: rtl;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
